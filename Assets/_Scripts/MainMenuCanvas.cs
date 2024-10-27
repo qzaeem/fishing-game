@@ -29,8 +29,8 @@ public class MainMenuCanvas : MonoBehaviour
         mainPanel.SetActive(true);
         loadingPanel.SetActive(false);
         startGameButton.interactable = false;
-        if (isServer)
-            StartAsServer();
+        //if (isServer)
+        //    StartAsServer();
     }
 
     private void OnNameValueChanged(string val)

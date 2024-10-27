@@ -45,10 +45,10 @@ namespace Fishing.Network
             }
         }
 
-        public void JoinServer()
+        public void JoinServer(string ip, ushort port)
         {
             UnityTransport transport = networkManager.GetComponent<UnityTransport>();
-            //transport.SetConnectionData();
+            transport.SetConnectionData(ip, port);
             networkManager.StartClient();
         }
     }

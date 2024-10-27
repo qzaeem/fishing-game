@@ -9,6 +9,9 @@ namespace Fishing.Network
     {
         [SerializeField] private string gameSceneName;
         [SerializeField] private string menuSceneName;
+        [SerializeField] MultiplayManager multiplayManager;
+        [SerializeField] private string ipAddress;
+        [SerializeField] private ushort port;
         private NetworkManager _networkManager;
 
         public  void OnEnable()
@@ -41,7 +44,7 @@ namespace Fishing.Network
 
         public void StartClient()
         {
-            _networkManager.StartClient();
+            multiplayManager.JoinServer(ipAddress, port);
         }
 
         #region Callbacks
