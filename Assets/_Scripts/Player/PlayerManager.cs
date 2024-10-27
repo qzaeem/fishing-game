@@ -14,12 +14,12 @@ namespace Fishing.Gameplay
         #region Network Variables
         public NetworkVariable<uint> score = new NetworkVariable<uint>(0);
         public NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>();
+        public NetworkVariable<uint> slot = new NetworkVariable<uint>(100);
         #endregion
 
         [Header("Fields")]
         public Transform bulletPoolContainer;
         [SerializeField] private Transform bulletSpawnPoint;
-        [SerializeField] private int bulletsInPool;
 
         [Header("Prefabs")]
         [SerializeField] private PlayerBullet bulletPrefab;
@@ -30,10 +30,14 @@ namespace Fishing.Gameplay
         [SerializeField] private StringVariable playerNameVariable;
         [SerializeField] private ActionSO gameEndAction;
         [SerializeField] private ActionSO updatePlayerScoreAction;
+        [SerializeField] private ConfigVariable gameConfig;
 
         private List<PlayerBullet> _bullets = new List<PlayerBullet>();
         private Coroutine shootCoroutine;
+        private int bulletsPerSecond;
+        private int bulletsInPool;
         private bool _canShoot;
+        private bool _faceDown;
 
         #region Class Methods
 
@@ -41,27 +45,44 @@ namespace Fishing.Gameplay
         {
             gameEndAction.executeAction += OnGameEnd;
             score.OnValueChanged += OnPlayerScoreChanged;
+            slot.OnValueChanged += OnSlotChanged;
         }
 
         private void OnDisable()
         {
             gameEndAction.executeAction -= OnGameEnd;
-            score.OnValueChanged += OnPlayerScoreChanged;
+            score.OnValueChanged -= OnPlayerScoreChanged;
+            slot.OnValueChanged -= OnSlotChanged;
         }
 
         private void Start()
         {
             players.Add(this);
+            SetPosition();
             _canShoot = true;
+            bulletsPerSecond = gameConfig.value.bulletsPerSecond;
+            bulletsInPool = gameConfig.value.bulletsInPool;
             StartCoroutine(PopulateBulletPool());
-            Vector3 pos = transform.position;
-            pos.x = players.value.Count == 1 ? -2.5f : 2.5f;
-            transform.position = pos;
 
             if (!this.LocalClientIsOwner())
                 return;
 
             SetNameServerRpc(playerNameVariable.value);
+        }
+
+        private void SetPosition()
+        {
+            Vector2 slotPos = gameConfig.value.slots[(int)slot.Value - 1];
+            var position = transform.position;
+            position.x = slotPos.x;
+            position.y = slotPos.y;
+            transform.position = position;
+
+            if (slotPos.y > 0)
+            {
+                _faceDown = true;
+                transform.up = Vector3.down;
+            }
         }
 
         private void Update()
@@ -84,7 +105,8 @@ namespace Fishing.Gameplay
             {
                 Vector3 currentUp = transform.up;
                 Vector3 newUp = Vector3.RotateTowards(currentUp, targetVector, Time.deltaTime * 5, 0);
-                if (newUp.y < 0.4f) newUp.y = 0.4f;
+                if (!_faceDown && newUp.y < 0.4f) newUp.y = 0.4f;
+                else if (_faceDown && newUp.y > -0.4f) newUp.y = -0.4f;
                 transform.rotation = Quaternion.LookRotation(transform.forward, newUp);
             }
         }
@@ -101,7 +123,7 @@ namespace Fishing.Gameplay
                     bulletsManager.AddActiveBullet(bullet);
                 }
 
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(1f / bulletsPerSecond);
             }
         }
 
@@ -130,9 +152,9 @@ namespace Fishing.Gameplay
             _bullets.Add(bullet);
         }
 
-        public void AddBulletResult(uint bulletID, bool hasScoredAHit)
+        public void AddBulletResult(uint bulletID, int hitScore)
         {
-            bulletsManager.AddBulletResult(bulletID, hasScoredAHit);
+            bulletsManager.AddBulletResult(bulletID, hitScore);
         }
         #endregion
 
@@ -155,6 +177,11 @@ namespace Fishing.Gameplay
         private void OnPlayerScoreChanged(uint oldScore, uint newScore)
         {
             updatePlayerScoreAction.Execute();
+        }
+
+        private void OnSlotChanged(uint oldSlot, uint newSlot)
+        {
+            
         }
         #endregion
 

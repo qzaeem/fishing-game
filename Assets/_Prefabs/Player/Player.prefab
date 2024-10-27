@@ -167,15 +167,17 @@ MonoBehaviour:
         byte0027: 0
         byte0028: 0
         byte0029: 0
+  slot:
+    m_InternalValue: 0
   bulletPoolContainer: {fileID: 5358356683796644134}
   bulletSpawnPoint: {fileID: 1678281143749127378}
-  bulletsInPool: 30
   bulletPrefab: {fileID: 2554922975651258872, guid: 01d8b968e74d84a28b76246ebbed2527, type: 3}
   players: {fileID: 11400000, guid: 3636549cd389645b99d8c039fbbcf956, type: 2}
   bulletsManager: {fileID: 11400000, guid: 6252a55a5df834e6ca18fd185a2b1eb5, type: 2}
   playerNameVariable: {fileID: 11400000, guid: b78a99b42dbe44cfabff4972b7540202, type: 2}
   gameEndAction: {fileID: 11400000, guid: 76ac543ad47de4d41b15cf81e48d1010, type: 2}
   updatePlayerScoreAction: {fileID: 11400000, guid: 08baff7964d3c432091ed691c7560b83, type: 2}
+  gameConfig: {fileID: 11400000, guid: a5253f86733e046b49b0e1eeeee4ac98, type: 2}
 --- !u!114 &3803290860516217332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,8 +198,8 @@ MonoBehaviour:
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1
-  SyncRotAngleX: 0
-  SyncRotAngleY: 0
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
   SyncRotAngleZ: 1
   SyncScaleX: 0
   SyncScaleY: 0

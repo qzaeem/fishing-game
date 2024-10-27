@@ -12,9 +12,13 @@ namespace Fishing.UI
     public class GameplayCanvas : MonoBehaviour
     {
         [Header("Fields")]
-        [SerializeField] private Color bulletMissColor, bulletHitColor;
-        [SerializeField] private TMP_Text localPlayerNameTMP, localPlayerScoreTMP, otherPlayerNameTMP, otherPlayerScoreTMP, timerTMP;
-        [SerializeField] private List<Image> bulletImages = new List<Image>();
+        [SerializeField] private TMP_Text localPlayerNameTMP;
+        [SerializeField] private TMP_Text localPlayerScoreTMP;
+        [SerializeField] private TMP_Text otherPlayerNameTMP;
+        [SerializeField] private TMP_Text otherPlayerScoreTMP;
+        [SerializeField] private TMP_Text timerTMP;
+        [SerializeField] private Image bulletImagePrefab;
+        [SerializeField] private Transform bulletImagesContainer;
 
         [Header("Game End")]
         [SerializeField] private GameObject gameEndPanel;
@@ -30,8 +34,15 @@ namespace Fishing.UI
         [SerializeField] private IntVariable timerVariable;
         [SerializeField] private ActionSO updateScoreAction;
         [SerializeField] private ActionSO gameEndAction;
+        [SerializeField] private ConfigVariable gameConfig;
 
+        private Color lowFishColor;
+        private Color mediumFishColor;
+        private Color highFishColor;
+        private Color noHitColor;
+        private int bulletsPerSecond;
         private PlayerManager _owner;
+        private List<Image> bulletImages = new List<Image>();
 
         private void OnEnable()
         {
@@ -64,8 +75,28 @@ namespace Fishing.UI
                 otherPlayerScoreTMP.gameObject.SetActive(false);
             }
 
+            lowFishColor = gameConfig.value.lowFishColor;
+            mediumFishColor = gameConfig.value.mediumFishColor;
+            highFishColor = gameConfig.value.highFishColor;
+            noHitColor = gameConfig.value.noHitColor;
+
+            bulletsPerSecond = gameConfig.value.bulletsPerSecond;
+
             gameEndPanel.SetActive(false);
             timerTMP.text = "00";
+            PopulateBulletImages();
+        }
+
+        private void PopulateBulletImages()
+        {
+            bulletImages.Clear();
+
+            for(int i = 0; i < bulletsPerSecond; i++)
+            {
+                var bulletImage = Instantiate(bulletImagePrefab, bulletImagesContainer);
+                bulletImage.GetComponentInChildren<TMP_Text>().text = "";
+                bulletImages.Add(bulletImage);
+            }
         }
 
         private void OnUpdateScore()
@@ -87,13 +118,22 @@ namespace Fishing.UI
             otherPlayerScoreTMP.gameObject.SetActive(players.value.Count > 1);
         }
 
-        private void OnBulletsResultUpdated(List<bool> results)
+        private void OnBulletsResultUpdated(List<int> results)
         {
             int bulletImageIndex = 0;
 
             for(int i = results.Count - 1; i >= 0; i--)
             {
-                bulletImages[bulletImageIndex].color = results[i] ? bulletHitColor : bulletMissColor;
+                Color color = noHitColor;
+                if (results[i] == 1)
+                    color = lowFishColor;
+                else if (results[i] == 3)
+                    color = mediumFishColor;
+                else if (results[i] == 7)
+                    color = highFishColor;
+
+                bulletImages[bulletImageIndex].color = color;
+                bulletImages[bulletImageIndex].GetComponentInChildren<TMP_Text>().text = results[i].ToString();
                 bulletImageIndex++;
             }
         }

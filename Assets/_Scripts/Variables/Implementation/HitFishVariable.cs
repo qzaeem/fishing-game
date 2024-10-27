@@ -12,5 +12,6 @@ namespace Fishing.Variables
     {
         public uint fishId;
         public uint bulletId;
+        public uint damage;
     }
 }

@@ -118,107 +118,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &235585428
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 235585432}
-  - component: {fileID: 235585431}
-  - component: {fileID: 235585430}
-  - component: {fileID: 235585429}
-  m_Layer: 5
-  m_Name: GameCanvas
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &235585429
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 235585428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &235585430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 235585428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 1
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 1
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
---- !u!223 &235585431
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 235585428}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
---- !u!224 &235585432
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 235585428}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
 --- !u!1 &961739749
 GameObject:
   m_ObjectHideFlags: 0
@@ -433,15 +332,15 @@ MonoBehaviour:
     m_InternalValue: 0
   normalFishPrefab: {fileID: 596195450409304243, guid: 96e94cbe1880a4e3fb83413f46689785, type: 3}
   rareFishPrefab: {fileID: 7851898602985777318, guid: 1af8f8eebc3d94261bcb1f268689af32, type: 3}
+  superRareFishPrefab: {fileID: 2764030496139686998, guid: 55bc371cd020f45c48f9ed88e7019763, type: 3}
   gameplayCanvasPrefab: {fileID: 7176116582087669759, guid: d0d55d9e45ef5402db1f4423b283101a, type: 3}
-  maxTime: 60
-  fishesInPool: 20
   players: {fileID: 11400000, guid: 3636549cd389645b99d8c039fbbcf956, type: 2}
   timerVariable: {fileID: 11400000, guid: 71c3f9bcf27bd4c53b736ae466d2532f, type: 2}
   fishes: {fileID: 11400000, guid: c78dafeb192d342f4afa665733f05932, type: 2}
   bulletsManager: {fileID: 11400000, guid: 6252a55a5df834e6ca18fd185a2b1eb5, type: 2}
   hitFishVariable: {fileID: 11400000, guid: de89b829e9295448483ad18670cbc485, type: 2}
   gameEndAction: {fileID: 11400000, guid: 76ac543ad47de4d41b15cf81e48d1010, type: 2}
+  gameConfig: {fileID: 11400000, guid: a5253f86733e046b49b0e1eeeee4ac98, type: 2}
 --- !u!1 &1049585079
 GameObject:
   m_ObjectHideFlags: 0
@@ -704,6 +603,5 @@ SceneRoots:
   m_Roots:
   - {fileID: 961739753}
   - {fileID: 1480623944}
-  - {fileID: 235585432}
   - {fileID: 1049585082}
   - {fileID: 963811107}

@@ -343,8 +343,9 @@ MonoBehaviour:
   bodyCollider: {fileID: 880605696927595176}
   rbody: {fileID: 8555654659009480689}
   zPosition: -6
-  shootSpeed: 15
+  shootSpeed: 12
   bulletLife: 2
+  damage: 10
   players: {fileID: 11400000, guid: 3636549cd389645b99d8c039fbbcf956, type: 2}
   hitFishVariable: {fileID: 11400000, guid: de89b829e9295448483ad18670cbc485, type: 2}
 --- !u!114 &-1007585557345855234

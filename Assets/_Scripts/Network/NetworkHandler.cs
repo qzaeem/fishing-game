@@ -59,7 +59,7 @@ namespace Fishing.Network
         {
             int currentPlayers = _networkManager.ConnectedClients.Count;
 
-            if (currentPlayers < 2)
+            if (currentPlayers < 4)
             {
                 response.Approved = true;
                 response.CreatePlayerObject = true;

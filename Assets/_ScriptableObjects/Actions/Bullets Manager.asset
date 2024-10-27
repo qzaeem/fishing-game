@@ -15,3 +15,5 @@ MonoBehaviour:
   debug: 0
   developerDescription: 
   fishes: {fileID: 11400000, guid: c78dafeb192d342f4afa665733f05932, type: 2}
+  gameConfig: {fileID: 11400000, guid: a5253f86733e046b49b0e1eeeee4ac98, type: 2}
+  hitProbability: 0.25

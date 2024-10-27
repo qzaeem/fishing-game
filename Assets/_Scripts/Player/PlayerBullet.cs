@@ -22,6 +22,7 @@ namespace Fishing.Gameplay
         [Header("Attributes")]
         [SerializeField] private float shootSpeed;
         [SerializeField] private float bulletLife;
+        [SerializeField] private int damage;
 
         [Header("Scriptable Object Variables")]
         [SerializeField] private PlayersListVariable players;
@@ -35,6 +36,7 @@ namespace Fishing.Gameplay
 
         public bool IsActive { get; set; }
         public uint BulletId { get; set; }
+        public int CurrentDamage { get; set; }
 
         private void Start()
         {
@@ -135,7 +137,7 @@ namespace Fishing.Gameplay
         private IEnumerator BulletLifeCoroutine()
         {
             yield return new WaitForSeconds(bulletLife);
-            _owner.AddBulletResult(BulletId, false);
+            _owner.AddBulletResult(BulletId, 0);
             ResetBullet();
         }
 
@@ -154,18 +156,26 @@ namespace Fishing.Gameplay
             _target = null;
             _direction = direction;
             transform.position = spawnPoint;
+            CurrentDamage = Random.Range(damage, (damage * 4) + 1);
             ShootBulletRpc(spawnPoint, direction);
-            StartCoroutine(BulletLifeCoroutine());
+            //StartCoroutine(BulletLifeCoroutine()); // Bullet will only be destroyed after hitting a fish.
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if(collision.tag == "fish" && this.LocalClientIsOwner())
+            if(collision.tag == "fish")
             {
+                spriteRenderer.enabled = false;
+                trailRenderer.emitting = false;
+                trailRenderer.enabled = false;
+                bodyCollider.enabled = false;
+
+                if (!this.LocalClientIsOwner())
+                    return;
+
                 var fish = collision.GetComponent<Fish>();
                 if (!fish.IsActive) return;
-                fish.IsActive = false;
-                hitFishVariable.Set(new HitFishParams { fishId = fish.fishID.Value, bulletId = BulletId });
+                hitFishVariable.Set(new HitFishParams { fishId = fish.fishID.Value, bulletId = BulletId, damage = (uint)CurrentDamage });
                 ResetBullet();
             }
         }
@@ -186,6 +196,7 @@ namespace Fishing.Gameplay
             trailRenderer.enabled = false;
             bodyCollider.enabled = false;
             IsActive = false;
+            CurrentDamage = damage;
             rbody.angularVelocity = 0;
             rbody.linearVelocity = Vector2.zero;
             rbody.bodyType = RigidbodyType2D.Kinematic;

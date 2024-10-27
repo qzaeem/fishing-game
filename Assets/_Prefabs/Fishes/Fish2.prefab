@@ -34,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -6}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -150,8 +150,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.06}
-  m_Radius: 0.15
+  m_Offset: {x: 0, y: 0.03}
+  m_Radius: 0.21
 --- !u!114 &5312747875711116204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,7 +272,9 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   fishID:
     m_InternalValue: 0
+  volatility: 60
   fishes: {fileID: 11400000, guid: c78dafeb192d342f4afa665733f05932, type: 2}
+  gameConfig: {fileID: 11400000, guid: a5253f86733e046b49b0e1eeeee4ac98, type: 2}
   spriteRenderer: {fileID: 1066376338478773549}
   myAnim: {fileID: 7101886149431506532}
   bodyCollider: {fileID: 4520139366994893289}
@@ -280,7 +282,5 @@ MonoBehaviour:
   zPosition: -6
   speedFactor: 1
   runFactor: 4
-  movingSpeed: 12
   runMinWaitTime: 0.2
   runMaxWaitTime: 2
-  score: 3
