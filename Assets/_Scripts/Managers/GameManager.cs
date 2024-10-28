@@ -140,6 +140,18 @@ namespace Fishing.Gameplay
             int timerVal = maxTime - (int)newVal;
             timerVariable.Set(timerVal);
         }
+
+        private void OnApplicationQuit()
+        {
+            if (Application.platform != RuntimePlatform.LinuxServer)
+            {
+                if (NetworkManager.IsConnectedClient)
+                {
+                    NetworkManager.Shutdown(true);
+                    NetworkManager.DisconnectClient(OwnerClientId);
+                }
+            }
+        }
         #endregion
 
 
@@ -213,6 +225,7 @@ namespace Fishing.Gameplay
                 StopCoroutine(spawnFishCoroutine);
                 StopCoroutine(timerCoroutine);
                 _hasGameStarted = false;
+                Application.Quit();
                 return;
             }
 

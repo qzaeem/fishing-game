@@ -22,10 +22,8 @@ namespace Fishing.UI
 
         [Header("Game End")]
         [SerializeField] private GameObject gameEndPanel;
-        [SerializeField] private TMP_Text player1NameTMP;
-        [SerializeField] private TMP_Text player2NameTMP;
-        [SerializeField] private TMP_Text player1ScoreTMP;
-        [SerializeField] private TMP_Text player2ScoreTMP;
+        [SerializeField] private Transform playerResultEntriesContainer;
+        [SerializeField] private PlayerResultEntry playerResultEntryPrefab;
 
         [Header("Scriptable Objects")]
         [SerializeField] private PlayersListVariable players;
@@ -46,7 +44,7 @@ namespace Fishing.UI
 
         private void OnEnable()
         {
-            updateScoreAction.executeAction += OnUpdateScore;
+            //updateScoreAction.executeAction += OnUpdateScore;
             bulletsManager.lastTenBulletResultsUpdated += OnBulletsResultUpdated;
             gameEndAction.executeAction += OnGameEnd;
             timerVariable.onValueChange += OnTimerUpdate;
@@ -54,7 +52,7 @@ namespace Fishing.UI
 
         private void OnDisable()
         {
-            updateScoreAction.executeAction -= OnUpdateScore;
+            //updateScoreAction.executeAction -= OnUpdateScore;
             bulletsManager.lastTenBulletResultsUpdated -= OnBulletsResultUpdated;
             gameEndAction.executeAction += OnGameEnd;
             timerVariable.onValueChange += OnTimerUpdate;
@@ -99,24 +97,24 @@ namespace Fishing.UI
             }
         }
 
-        private void OnUpdateScore()
-        {
-            players.value.ForEach(p =>
-            {
-                if (p.IsLocalPlayer)
-                {
-                    localPlayerScoreTMP.text = p.score.Value.ToString();
-                }
-                else
-                {
-                    otherPlayerScoreTMP.text = p.score.Value.ToString();
-                    otherPlayerNameTMP.text = p.playerName.Value.ToString();
-                }
-            });
+        //private void OnUpdateScore()
+        //{
+        //    players.value.ForEach(p =>
+        //    {
+        //        if (p.IsLocalPlayer)
+        //        {
+        //            localPlayerScoreTMP.text = p.score.Value.ToString();
+        //        }
+        //        else
+        //        {
+        //            otherPlayerScoreTMP.text = p.score.Value.ToString();
+        //            otherPlayerNameTMP.text = p.playerName.Value.ToString();
+        //        }
+        //    });
 
-            otherPlayerNameTMP.gameObject.SetActive(players.value.Count > 1);
-            otherPlayerScoreTMP.gameObject.SetActive(players.value.Count > 1);
-        }
+        //    otherPlayerNameTMP.gameObject.SetActive(players.value.Count > 1);
+        //    otherPlayerScoreTMP.gameObject.SetActive(players.value.Count > 1);
+        //}
 
         private void OnBulletsResultUpdated(List<int> results)
         {
@@ -145,20 +143,11 @@ namespace Fishing.UI
 
         private void OnGameEnd()
         {
-            player1NameTMP.text = _owner.playerName.Value.ToString();
-            player1ScoreTMP.text = _owner.score.Value.ToString();
-
-            var otherPlayer = players.value.FirstOrDefault(p => !p.IsLocalPlayer);
-
-            if (otherPlayer)
+            players.value.ForEach(p =>
             {
-                player2NameTMP.text = otherPlayer.playerName.Value.ToString();
-                player2ScoreTMP.text = otherPlayer.score.Value.ToString();
-            }
-            else
-            {
-                player2NameTMP.transform.parent.gameObject.SetActive(false);
-            }
+                var entry = Instantiate(playerResultEntryPrefab, playerResultEntriesContainer);
+                entry.ShowResult(p.playerName.Value.ToString(), p.score.Value.ToString());
+            });
 
             gameEndPanel.SetActive(true);
         }

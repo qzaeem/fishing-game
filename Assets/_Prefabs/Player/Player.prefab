@@ -171,6 +171,7 @@ MonoBehaviour:
     m_InternalValue: 0
   bulletPoolContainer: {fileID: 5358356683796644134}
   bulletSpawnPoint: {fileID: 1678281143749127378}
+  playerCanvasPrefab: {fileID: 1632959734943983521, guid: 2de65d26570f54e10b2529c3b2996241, type: 3}
   bulletPrefab: {fileID: 2554922975651258872, guid: 01d8b968e74d84a28b76246ebbed2527, type: 3}
   players: {fileID: 11400000, guid: 3636549cd389645b99d8c039fbbcf956, type: 2}
   bulletsManager: {fileID: 11400000, guid: 6252a55a5df834e6ca18fd185a2b1eb5, type: 2}

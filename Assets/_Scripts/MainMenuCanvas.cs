@@ -26,8 +26,6 @@ public class MainMenuCanvas : MonoBehaviour
     private void Start()
     {
         _networkHandler = NetworkHandler.Instance;
-        mainPanel.SetActive(true);
-        loadingPanel.SetActive(false);
         startGameButton.interactable = false;
         //if (isServer)
         //    StartAsServer();
@@ -36,6 +34,12 @@ public class MainMenuCanvas : MonoBehaviour
     private void OnNameValueChanged(string val)
     {
         startGameButton.interactable = val.Length > 0;
+    }
+
+    public void ShowLoading(bool isLoading)
+    {
+        mainPanel.SetActive(!isLoading);
+        loadingPanel.SetActive(isLoading);
     }
 
     public void StartAsServer()

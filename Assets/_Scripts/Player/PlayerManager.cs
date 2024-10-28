@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections;
 using Fishing.Actions;
 using Unity.Collections;
+using Fishing.UI;
 
 namespace Fishing.Gameplay
 {
@@ -20,6 +21,7 @@ namespace Fishing.Gameplay
         [Header("Fields")]
         public Transform bulletPoolContainer;
         [SerializeField] private Transform bulletSpawnPoint;
+        [SerializeField] PlayerCanvas playerCanvasPrefab;
 
         [Header("Prefabs")]
         [SerializeField] private PlayerBullet bulletPrefab;
@@ -33,6 +35,7 @@ namespace Fishing.Gameplay
         [SerializeField] private ConfigVariable gameConfig;
 
         private List<PlayerBullet> _bullets = new List<PlayerBullet>();
+        private PlayerCanvas _playerCanvas;
         private Coroutine shootCoroutine;
         private int bulletsPerSecond;
         private int bulletsInPool;
@@ -46,6 +49,7 @@ namespace Fishing.Gameplay
             gameEndAction.executeAction += OnGameEnd;
             score.OnValueChanged += OnPlayerScoreChanged;
             slot.OnValueChanged += OnSlotChanged;
+            playerName.OnValueChanged += OnPlayerNameChanged;
         }
 
         private void OnDisable()
@@ -53,6 +57,7 @@ namespace Fishing.Gameplay
             gameEndAction.executeAction -= OnGameEnd;
             score.OnValueChanged -= OnPlayerScoreChanged;
             slot.OnValueChanged -= OnSlotChanged;
+            playerName.OnValueChanged -= OnPlayerNameChanged;
         }
 
         private void Start()
@@ -67,6 +72,7 @@ namespace Fishing.Gameplay
             if (!this.LocalClientIsOwner())
                 return;
 
+            _playerCanvas.UpdateNameAndScore(playerNameVariable.value, score.Value.ToString());
             SetNameServerRpc(playerNameVariable.value);
         }
 
@@ -83,6 +89,10 @@ namespace Fishing.Gameplay
                 _faceDown = true;
                 transform.up = Vector3.down;
             }
+
+            _playerCanvas = Instantiate(playerCanvasPrefab);
+            _playerCanvas.UpdatePosition(new Vector3(slotPos.x, slotPos.y, transform.position.z));
+            _playerCanvas.UpdateNameAndScore(playerName.Value.ToString(), score.Value.ToString());
         }
 
         private void Update()
@@ -176,7 +186,13 @@ namespace Fishing.Gameplay
 
         private void OnPlayerScoreChanged(uint oldScore, uint newScore)
         {
+            _playerCanvas.UpdateNameAndScore(playerName.Value.ToString(), newScore.ToString());
             updatePlayerScoreAction.Execute();
+        }
+
+        private void OnPlayerNameChanged(FixedString32Bytes oldName, FixedString32Bytes newName)
+        {
+            _playerCanvas.UpdateNameAndScore(newName.ToString(), score.Value.ToString());
         }
 
         private void OnSlotChanged(uint oldSlot, uint newSlot)

@@ -1,16 +1,26 @@
 using Unity.Services.Core;
 using UnityEngine;
+#if !UNITY_WEBGL
 using Unity.Services.Multiplay;
+#endif
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using System.Threading.Tasks;
+using Fishing.Models;
+using System.Collections;
+using Unity.Services.Matchmaker.Models;
+using System.Collections.Generic;
+using Unity.Services.Matchmaker;
 
 namespace Fishing.Network
 {
-    public class MultiplayManager : MonoBehaviour
+    public class MultiplayManager : MonoBehaviourSingleton<MultiplayManager>
     {
         [SerializeField] private NetworkManager networkManager;
+        [SerializeField] private string myQueueName;
+        private string _ticketId;
 
+#if !UNITY_WEBGL
         private IServerQueryHandler serverQueryHandler;
 
         private async void Start()
@@ -29,21 +39,59 @@ namespace Fishing.Network
                     networkManager.StartServer();
                     await MultiplayService.Instance.ReadyServerForPlayersAsync();
                 }
+
+                await CreateBackfillTicket();
+                StartCoroutine(ApproveBackfillTicketEverySecond());
             }
         }
 
-        private async void Update()
+        private async Task CreateBackfillTicket()
         {
-            if (Application.platform == RuntimePlatform.LinuxServer)
+            MatchmakingResults results =
+                await MultiplayService.Instance.GetPayloadAllocationFromJsonAs<MatchmakingResults>();
+
+            Debug.Log(
+                $"Environment: {results.EnvironmentId} MatchId: {results.MatchId} MatchProperties: {results.MatchProperties}");
+
+            var backfillTicketProperties = new BackfillTicketProperties(results.MatchProperties);
+
+            string queueName = myQueueName; // must match the name of the queue you want to use in matchmaker
+            string connectionString = MultiplayService.Instance.ServerConfig.IpAddress + ":" +
+                                      MultiplayService.Instance.ServerConfig.Port;
+
+            var options = new CreateBackfillTicketOptions(queueName,
+                connectionString,
+                new Dictionary<string, object>(),
+                backfillTicketProperties);
+
+            // Create backfill ticket
+            Debug.Log("Requesting backfill ticket");
+            _ticketId = await MatchmakerService.Instance.CreateBackfillTicketAsync(options);
+        }
+
+        private IEnumerator ApproveBackfillTicketEverySecond()
+        {
+            for (int i = 2; i >= 0; i--)
             {
-                if(serverQueryHandler != null)
+                Debug.Log($"Waiting {i} seconds to start backfill");
+                yield return new WaitForSeconds(1f);
+            }
+
+            while (true)
+            {
+                yield return new WaitForSeconds(1f);
+                if (string.IsNullOrWhiteSpace(_ticketId))
                 {
-                    serverQueryHandler.CurrentPlayers = (ushort)networkManager.ConnectedClientsIds.Count;
-                    serverQueryHandler.UpdateServerCheck();
-                    await Task.Delay(100);
+                    Debug.Log("No backfill ticket to approve");
+                    continue;
                 }
+
+                Debug.Log("Doing backfill approval for _ticketId: " + _ticketId);
+                yield return MatchmakerService.Instance.ApproveBackfillTicketAsync(_ticketId);
+                Debug.Log("Approved backfill ticket: " + _ticketId);
             }
         }
+#endif
 
         public void JoinServer(string ip, ushort port)
         {
